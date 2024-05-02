@@ -27,10 +27,10 @@
   const fileURL = target.href;
   const serviceProvider = new URL("./", sourceURL.href).href;
   const rawFileURL = fetchFromJsDelivr
-    ? `https://cdn.jsdelivr.net/gh/${user}/${repository}@${branch}/${filePath}`
+    ? `https://fastly.jsdelivr.net/gh/${user}/${repository}@${branch}/${filePath}`
     : `https://raw.githubusercontent.com/${user}/${repository}/${branch}/${filePath}`;
   const rawDirectoryURL = fetchFromJsDelivr
-    ? `https://cdn.jsdelivr.net/gh/${user}/${repository}@${branch}/${directoryPath}/`
+    ? `https://fastly.jsdelivr.net/gh/${user}/${repository}@${branch}/${directoryPath}/`
     : `https://raw.githubusercontent.com/${user}/${repository}/${branch}/${directoryPath}/`;
 
   const containerId = Math.random().toString(36).substring(2);
@@ -337,13 +337,13 @@
 
 
   // Loading the external libraries
-  const HLJSURL = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/highlight.min.js";
-  const HLJSNumURL = "https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js";
+  const HLJSURL = "https://fastly.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/highlight.min.js";
+  const HLJSNumURL = "https://fastly.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js";
   const loadHLJS = typeof hljs != "undefined" && typeof hljs.highlightElement != "undefined" ? Promise.resolve() : loadScript(HLJSURL);
   // Always use hljs-num even if showLineNumbers is false for a consistent display
   // hljs-num should be loaded only after hljs is loaded
   const loadHLJSNum = loadHLJS.then(() => (typeof hljs.lineNumbersBlock != "undefined" ? Promise.resolve() : loadScript(HLJSNumURL)));
-  const loadHLJSStyle = fetch(`https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/styles/${style}.min.css`)
+  const loadHLJSStyle = fetch(`https://fastly.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/styles/${style}.min.css`)
     .then((response) => response.text())
     .then((text) => {
       insertStyle(scopeCss(text, '.' + styleClassName));
@@ -352,8 +352,8 @@
   promises.push(loadHLJSNum);
 
   if (type === 'markdown' || type === 'ipynb') {
-    const loadMarked = typeof marked != "undefined" ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/npm/marked@4.0.18/marked.min.js');
-    const loadMarkdownStyle = fetch(`https://cdn.jsdelivr.net/gh/sindresorhus/github-markdown-css@5.1.0/github-markdown-${isDarkStyle ? 'dark' : 'light'}.min.css`)
+    const loadMarked = typeof marked != "undefined" ? Promise.resolve() : loadScript('https://fastly.jsdelivr.net/npm/marked@4.0.18/marked.min.js');
+    const loadMarkdownStyle = fetch(`https://fastly.jsdelivr.net/gh/sindresorhus/github-markdown-css@5.1.0/github-markdown-${isDarkStyle ? 'dark' : 'light'}.min.css`)
       .then((response) => response.text())
       .then((text) => {
         insertStyle(text);
@@ -363,19 +363,19 @@
         // insertStyle(scopeCss(text, '.' + styleClassName));
       });
 
-    const loadKatexStyle = fetch('https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css')
+    const loadKatexStyle = fetch('https://fastly.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css')
       .then((response) => response.text())
       .then((text) => {
-        insertStyle(text.replaceAll('url(fonts/', 'url(https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/fonts/'));
+        insertStyle(text.replaceAll('url(fonts/', 'url(https://fastly.jsdelivr.net/npm/katex@0.16.0/dist/fonts/'));
       });
 
     promises.push(loadMarked);
 
     if (type === 'ipynb') {
-      const loadAnsiUp = typeof AnsiUp != "undefined" ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/gh/drudru/ansi_up@4.0.4/ansi_up.min.js');
-      const loadDOMPurify = typeof DOMPurify != "undefined" ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/npm/dompurify@2.3.10/dist/purify.min.js');
+      const loadAnsiUp = typeof AnsiUp != "undefined" ? Promise.resolve() : loadScript('https://fastly.jsdelivr.net/gh/drudru/ansi_up@4.0.4/ansi_up.min.js');
+      const loadDOMPurify = typeof DOMPurify != "undefined" ? Promise.resolve() : loadScript('https://fastly.jsdelivr.net/npm/dompurify@2.3.10/dist/purify.min.js');
       const loadNotebookjs = Promise.all([loadMarked, loadAnsiUp, loadDOMPurify])
-        .then(() => (typeof nb != "undefined" ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/gh/jsvine/notebookjs@0.6.7/notebook.min.js')))
+        .then(() => (typeof nb != "undefined" ? Promise.resolve() : loadScript('https://fastly.jsdelivr.net/gh/jsvine/notebookjs@0.6.7/notebook.min.js')))
         .then(() => {
           nb.markdown = (text) => marked.parse(text, { baseUrl: rawDirectoryURL });
           const ansi_up = new AnsiUp();
@@ -473,8 +473,8 @@
       // Specifically, in that code snippet, if `el.innerHTML` is assigned with something like `include <stdio.h>`,
       // then the value read from `el.innerHTML` will be `include <stdio.h></stdio.h>`,
       // So if `#include <stdio.h>` is in a Markdown code block, wrong results will be rendered
-      const loadKatex = typeof katex != "undefined" ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js');
-      const loadKatexAutoRender = loadKatex.then(() => typeof renderMathInElement != "undefined" ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js'));
+      const loadKatex = typeof katex != "undefined" ? Promise.resolve() : loadScript('https://fastly.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js');
+      const loadKatexAutoRender = loadKatex.then(() => typeof renderMathInElement != "undefined" ? Promise.resolve() : loadScript('https://fastly.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js'));
       loadKatexAutoRender.then(() => {
         renderMathInElement(targetDiv, {
           delimiters: [
